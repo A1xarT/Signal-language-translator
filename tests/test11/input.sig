@@ -1,0 +1,4 @@
+    PROGRAM PR1;
+    LABEL VAR1;
+    BEGIN
+    END.

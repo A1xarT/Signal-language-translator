@@ -1,0 +1,30 @@
+
+                                       Token table
+  Row  |  Column |    Token identifier |     Token value  
+   1       1              401                 PROGRAM     
+   1       9              1001                PR1         
+   1       12             59                  ;           
+   2       1              402                 BEGIN       
+   3       1              403                 END         
+
+                                  Identifier table
+          Value
+         PR1            
+Parser: Error (line 3, column 4): '.' expected but 'EndOfFile' found
+
+                                       Syntax tree
+<signal-program>
+..<program>
+....401 PROGRAM
+....<procedure-identifier>
+......<identifier>
+........1001 PR1
+....59 ;
+....<block>
+......<declarations>
+........<label-declarations>
+..........<empty>
+......402 BEGIN
+......<statements-list>
+........<empty>
+......403 END

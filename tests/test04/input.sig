@@ -1,0 +1,5 @@
+PROGRAM PR1;
+LABEL 1;
+BEGIN
+1:2:3:;
+END.

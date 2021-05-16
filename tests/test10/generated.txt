@@ -1,0 +1,5 @@
+Parser: Error (line 0, column 0): 'PROGRAM' expected but 'EndOfFile' found
+
+                                       Syntax tree
+<signal-program>
+..<program>

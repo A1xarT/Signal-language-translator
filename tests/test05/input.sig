@@ -1,0 +1,5 @@
+PROGRAM PR1;
+
+BEGIN
+GOTO 1;;;
+END.

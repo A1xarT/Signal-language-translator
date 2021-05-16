@@ -1,0 +1,78 @@
+
+                                       Token table
+  Row  |  Column |    Token identifier |     Token value  
+   1       1              401                 PROGRAM     
+   1       9              1001                PR1         
+   1       12             59                  ;           
+   2       1              402                 BEGIN       
+   3       1              406                 IF          
+   3       4              1002                VAR1        
+   3       9              61                  =           
+   3       11             501                 6           
+   3       13             407                 THEN        
+   4       1              405                 GOTO        
+   4       6              502                 3           
+   4       7              59                  ;           
+   5       1              408                 ELSE        
+   6       1              405                 GOTO        
+   6       6              503                 4           
+   6       7              59                  ;           
+   7       1              403                 END         
+   7       4              46                  .           
+
+                                    Constant table
+    Type                    Value
+   unsigned int          6              
+   unsigned int          3              
+   unsigned int          4              
+
+                                  Identifier table
+          Value
+         PR1            
+         VAR1           
+Parser: Error (line 7, column 1): 'ENDIF' expected but 'END' found
+
+                                       Syntax tree
+<signal-program>
+..<program>
+....401 PROGRAM
+....<procedure-identifier>
+......<identifier>
+........1001 PR1
+....59 ;
+....<block>
+......<declarations>
+........<label-declarations>
+..........<empty>
+......402 BEGIN
+......<statements-list>
+........<statement>
+..........<condition-statement>
+............<incomplete-condition-statement>
+..............406 IF
+..............<conditional-expression>
+................<variable-identifier>
+..................<identifier>
+....................1002 VAR1
+................61 =
+................<unsigned-integer>
+..................501 6
+..............407 THEN
+..............<statements-list>
+................<statement>
+..................405 GOTO
+..................<unsigned-integer>
+....................502 3
+..................59 ;
+................<statements-list>
+..................<empty>
+............<alternative-part>
+..............408 ELSE
+..............<statements-list>
+................<statement>
+..................405 GOTO
+..................<unsigned-integer>
+....................503 4
+..................59 ;
+................<statements-list>
+..................<empty>

@@ -18,6 +18,6 @@ char* InitSymbolTable()
 }
 list<string> InitKeywords()
 {
-	list<string> lst = { "PROGRAM", "BEGIN", "END", "LABEL", "GOTO", "IF", "THEN", "ELSE" , "ENDIF", "CONST"}; // 401 ...
+	list<string> lst = { "PROGRAM", "BEGIN", "END", "LABEL", "GOTO", "IF", "THEN", "ELSE" , "ENDIF"}; // 401 ...
 	return lst;
 }

@@ -1,6 +1,6 @@
 #include "Lexer.h"
 #include "Parser.h"
-
+#include "Test.h"
 
 using namespace std;
 
@@ -22,10 +22,11 @@ int main(int argc, char* argv[])
 		system("pause");
 		return 0;
 	}
-	Lexer(test_file, file_path + "\\generated.txt");
-	Parser(file_path + "\\generated.txt");
-	print_file(file_path + "\\generated.txt");
-	print_file(file_path + "\\input.sig");
+	//Lexer(test_file, file_path + "\\generated.txt");
+	//Parser(file_path + "\\generated.txt");
+	//print_file(file_path + "\\generated.txt");
+	//print_file(file_path + "\\input.sig");
+	run_tests("tests", "test", 11);
 	system("pause");
 	return 0;
 }

@@ -44,8 +44,6 @@ Parser: Error (line 7, column 1): 'ENDIF' expected but 'END' found
 ......<declarations>
 ........<label-declarations>
 ..........<empty>
-........<constant-declarations>
-..........<empty>
 ......402 BEGIN
 ......<statements-list>
 ........<statement>

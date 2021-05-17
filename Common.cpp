@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "Common.h"
 #include <fstream>
 #include <iomanip>
+#include "Common.h"
 
 void LogError(const char* dest, int line, int column, const char* description)
 {
@@ -142,6 +142,13 @@ bool FindConstant(string _value, string _type)
 		}
 	}
 	return false;
+}
+void FreeTables()
+{
+	token_list.clear();
+	identifier_list.clear();
+	constant_list.clear();
+	error_list.clear();
 }
 void AddToken(Token token)
 {

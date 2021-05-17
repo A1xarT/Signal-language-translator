@@ -17,6 +17,7 @@ void Parser(string output_path)
 	SignalProgram(token, "");
 	LoadErrorLog(output_path);
 	LoadSyntaxTree(output_path, syntax_tree);
+	syntax_tree.clear();
 }
 
 bool SignalProgram(list<Token>::iterator& it, string indent)
@@ -127,8 +128,6 @@ bool Declarations(list<Token>::iterator& it, string indent)
 	AddBranch("<declarations>", indent);
 	if (!LabelDeclarations(it, indent + ".."))
 		return false;
-	if (!ConstantDeclarations(it, indent + ".."))
-		return false;
 	return true;
 }
 bool LabelDeclarations(list<Token>::iterator& it, string indent)
@@ -154,81 +153,6 @@ bool LabelDeclarations(list<Token>::iterator& it, string indent)
 		it = prevIt;
 		return false;
 	}
-	if (EofErrorCheck(";", it, prevIt))
-		return false;
-	if ((*it).code != ';')
-	{
-		LogParserError(";", *it);
-		it = prevIt;
-		return false;
-	}
-	AddBranch(to_string((*it).code) + " " + (*it).value, indent + "..");
-	it++;
-	return true;
-}
-bool ConstantDeclarations(list<Token>::iterator& it, string indent)
-{
-	AddBranch("<constant-declarations>", indent);
-	list<Token>::iterator prevIt = it;
-	if (EndOfTokenList(it) || (*it).code!= 410)
-	{
-		AddBranch("<empty>", indent + "..");
-		return true;
-	}
-	AddBranch(to_string((*it).code) + " " + (*it).value, indent + "..");
-	it++;
-
-	if (!ConstantDeclarationList(it, indent + ".."))
-		return false;
-	return true;
-}
-bool ConstantDeclarationList(list<Token>::iterator& it, string indent)
-{
-	AddBranch("<constant-declarations-list>", indent);
-	list<Token>::iterator prevIt = it;
-	list<string> prevErrList(GetErrorList());
-	list<string> prevTree(syntax_tree);
-
-	bool check = false;
-	if (!ConstantDeclaration(it, indent + "..", check))
-	{
-		if (check == true)
-		{
-			syntax_tree = prevTree;
-			SetErrorList(prevErrList);
-			AddBranch("<empty>", indent + "..");
-			return true;
-		}
-		it = prevIt;
-		return false;
-	}
-	if (!ConstantDeclarationList(it, indent + ".."))
-		return false;
-	return true;
-}
-bool ConstantDeclaration(list<Token>::iterator& it, string indent, bool& insideErr)
-{
-	AddBranch("<constant-declaration>", indent);
-	list<Token>::iterator prevIt = it;
-	if (EofErrorCheck("<constant-identifier>", it, prevIt) || !ConstIdentifier(it, indent + ".."))
-	{
-		insideErr = !insideErr;
-		return false;
-	}
-	if (EofErrorCheck("=", it, prevIt))
-		return false;
-	if ((*it).code != '=')
-	{
-		LogParserError("=", *it);
-		it = prevIt;
-		return false;
-	}
-	AddBranch(to_string((*it).code) + " " + (*it).value, indent + "..");
-	it++;
-	if (EofErrorCheck("<unsigned-integer>", it, prevIt))
-		return false;
-	if (!UnsignedInteger(it, indent + ".."))
-		return false;
 	if (EofErrorCheck(";", it, prevIt))
 		return false;
 	if ((*it).code != ';')
@@ -517,17 +441,6 @@ bool UnsignedInteger(list<Token>::iterator& it, string indent)
 {
 	AddBranch("<unsigned-integer>", indent);
 	if (IsConstant(*it, indent + ".."))
-	{
-		it++;
-		return true;
-	}
-	RemoveLastBranch();
-	return false;
-}
-bool ConstIdentifier(list<Token>::iterator& it, string indent)
-{
-	AddBranch("<constant-identifier>", indent);
-	if (IsIdentifier(*it, indent + ".."))
 	{
 		it++;
 		return true;

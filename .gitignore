@@ -13,6 +13,8 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 *Lab3*
+*.pdf
+*.doc*
 
 # Build results
 [Dd]ebug/

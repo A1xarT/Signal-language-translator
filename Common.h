@@ -24,10 +24,8 @@ typedef struct {
 static list<Token> token_list;
 static list<Identifier> identifier_list;
 static list<Constant> constant_list;
-
 static list<string> error_list;
 
-list<string> GetErrorList();
 void SetErrorList(list<string> newList);
 
 void LogError(const char* dest, int line, int column, const char* description);
@@ -46,6 +44,9 @@ void AddToken(Token token);
 void AddIdentifier(Identifier identifier);
 void AddConstant(Constant constant);
 
+void FreeTables();
+
 list<Token> GetTokenList();
 list<Identifier> GetIdentifierList();
 list<Constant> GetConstantList();
+list<string> GetErrorList();

@@ -1,21 +1,21 @@
 
                                        Token table
   Row  |  Column |    Token identifier |     Token value  
-   1       1              401                 PROGRAM     
-   1       9              1001                PR1         
-   1       12             59                  ;           
-   2       1              404                 LABEL       
-   2       7              1002                VAR1        
-   2       11             59                  ;           
-   3       1              402                 BEGIN       
-   4       1              403                 END         
-   4       4              46                  .           
+   1       5              401                 PROGRAM     
+   1       13             1001                PR1         
+   1       16             59                  ;           
+   2       5              404                 LABEL       
+   2       11             1002                VAR1        
+   2       15             59                  ;           
+   3       5              402                 BEGIN       
+   4       5              403                 END         
+   4       8              46                  .           
 
                                   Identifier table
           Value
          PR1            
          VAR1           
-Parser: Error (line 2, column 7): '<unsigned-integer>' expected but 'VAR1' found
+Parser: Error (line 2, column 11): '<unsigned-integer>' expected but 'VAR1' found
 
                                        Syntax tree
 <signal-program>

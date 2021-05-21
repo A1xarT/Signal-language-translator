@@ -1,6 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include <fstream>
-#include <iomanip>
+
 #include "Common.h"
 
 void LogError(const char* dest, int line, int column, const char* description)

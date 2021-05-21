@@ -1,5 +1,7 @@
 #pragma once
+
 #include <string>
-#include "Common.h"
+
+using namespace std;
 
 void CodeGenerator(string output_path);

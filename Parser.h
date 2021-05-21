@@ -1,10 +1,11 @@
 #pragma once
 #include <string>
-#include "Common.h"
+#include "SyntaxStructures.h"
 
 using namespace std;
 
 static list<string> syntax_tree;
+static _signal_program* program_tree;
 static Token LastToken;
 
 void Parser(string output_path);

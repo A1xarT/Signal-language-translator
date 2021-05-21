@@ -1,7 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
+
 #include "Lexer.h"
-#include "Init.h"
-#include "Common.h"
 
 void Lexer(ifstream& test_file, string output_path)
 {

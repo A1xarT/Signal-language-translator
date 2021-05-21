@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <iostream>
+#include <fstream>
 #include "Lexer.h"
 #include "Parser.h"
 #include "CodeGenerator.h"

@@ -92,7 +92,7 @@ void LoadSyntaxTree(string path, list<string> syntax_tree)
 	if (syntax_tree.size() == 0) return;
 	ofstream out;
 	out.open(path, ios::app);
-	if(out.is_open())
+	if (out.is_open())
 	{
 		out << endl << setw(50) << "Syntax tree" << endl;
 		list<string>::iterator it;
@@ -142,6 +142,17 @@ bool FindConstant(string _value, string _type)
 	}
 	return false;
 }
+Variable FindVariable(string name)
+{
+	list<Variable>::iterator it;
+	for (it = variables_list.begin(); it != variables_list.end(); it++)
+	{
+		Variable var = *it;
+		if (var.identifier->value == name)
+			return var;
+	}
+	return Variable{ new Identifier{""}, new Constant{"", ""} };
+}
 void FreeTables()
 {
 	token_list.clear();
@@ -155,11 +166,19 @@ void AddToken(Token token)
 }
 void AddIdentifier(Identifier identifier)
 {
-	identifier_list.push_back(identifier);
+	if (!FindIdentifier(identifier.value))
+		identifier_list.push_back(identifier);
+}
+void AddVariable(Variable variable)
+{
+	variables_list.push_back(variable);
+	AddConstant(*variable.constant);
+	AddIdentifier(*variable.identifier);
 }
 void AddConstant(Constant constant)
 {
-	constant_list.push_back(constant);
+	if (!FindConstant(constant.value, constant.type))
+		constant_list.push_back(constant);
 }
 list<Token> GetTokenList()
 {
@@ -172,4 +191,8 @@ list<Identifier> GetIdentifierList()
 list<Constant> GetConstantList()
 {
 	return constant_list;
+}
+list<Variable> GetVariablesList()
+{
+	return variables_list;
 }

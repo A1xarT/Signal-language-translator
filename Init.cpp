@@ -1,4 +1,5 @@
 #include "Init.h"
+#include "Common.h"
 
 char* InitSymbolTable()
 {
@@ -18,6 +19,19 @@ char* InitSymbolTable()
 }
 list<string> InitKeywords()
 {
-	list<string> lst = { "PROGRAM", "BEGIN", "END", "LABEL", "GOTO", "IF", "THEN", "ELSE" , "ENDIF"}; // 401 ...
+	list<string> lst = { "PROGRAM", "BEGIN", "END", "LABEL", "GOTO", "IF", "THEN", "ELSE" , "ENDIF" }; // 401 ...
 	return lst;
+}
+list<Variable> InitVariables()
+{
+	list<Variable> variables = { Variable{new Identifier{"VAR1"}, new Constant{"12", "i"}},
+		Variable{new Identifier{"VAR2"}, new Constant{"200", "i"}},
+		Variable{new Identifier{"VAR3"}, new Constant{"name1", "s"}},
+		Variable{new Identifier{"VAR4"}, new Constant{"family", "s"}} };
+	return variables;
+}
+list<Constant> InitConstants()
+{
+	list<Constant> constants = { };
+	return constants;
 }

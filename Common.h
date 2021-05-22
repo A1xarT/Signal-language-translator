@@ -1,5 +1,4 @@
 #pragma once
-
 #include <list>
 #include <fstream>
 #include <iomanip>
@@ -13,17 +12,23 @@ typedef struct {
 	string value;
 }Token;
 
-typedef struct {
+typedef struct Identifier{
 	string value;
 }Identifier;
 
-typedef struct {
+typedef struct Constant {
 	string value;
 	string type;
 }Constant;
 
+typedef struct Variable {
+	Identifier* identifier;
+	Constant* constant;
+}Variable;
+
 static list<Token> token_list;
 static list<Identifier> identifier_list;
+static list<Variable> variables_list;
 static list<Constant> constant_list;
 static list<string> error_list;
 
@@ -39,10 +44,12 @@ void LoadSyntaxTree(string path, list<string> syntax_tree);
 
 int FindToken(string _value);
 bool FindIdentifier(string _value);
+Variable FindVariable(string name);
 bool FindConstant(string _value, string _type);
 
 void AddToken(Token token);
 void AddIdentifier(Identifier identifier);
+void AddVariable(Variable variable);
 void AddConstant(Constant constant);
 
 void FreeTables();
@@ -50,4 +57,5 @@ void FreeTables();
 list<Token> GetTokenList();
 list<Identifier> GetIdentifierList();
 list<Constant> GetConstantList();
+list<Variable> GetVariablesList();
 list<string> GetErrorList();

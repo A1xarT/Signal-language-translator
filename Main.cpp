@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 	//	return 0;
 	//}
 	//string file_path = argv[1];
-	string file_path = "tests/test07";
+	string file_path = "tests/test01";
 	ifstream test_file(file_path + "\\input.sig");
 	if (!test_file.is_open())
 	{
@@ -20,11 +20,12 @@ int main(int argc, char* argv[])
 		system("pause");
 		return 0;
 	}
-	//Lexer(test_file, file_path + "\\generated.txt");
-	//Parser(file_path + "\\generated.txt");
+	Lexer(test_file, file_path + "\\generated.txt");
+	auto program_tree = Parser(file_path + "\\generated.txt");
+	CodeGenerator(program_tree, file_path + "\\generated.txt");
 	//print_file(file_path + "\\generated.txt");
 	//print_file(file_path + "\\input.sig");
-	run_tests("tests", "test", 11);
+	//run_tests("tests", "test", 11);
 	system("pause");
 	return 0;
 }

@@ -1,8 +1,8 @@
 PROGRAM PR1;
-LABEL 1 , 2 , 3;
+LABEL 1 , 2 , 3 , 4;
 BEGIN 
-4: 3: ;;
-GOTO 5;
+1: 2: 3: 4:;;
+GOTO 1;
 IF VAR1 = 6 THEN
 GOTO 3;
 ELSE

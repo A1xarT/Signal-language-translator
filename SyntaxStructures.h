@@ -35,7 +35,7 @@ struct _labels_list {
 
 struct _statements_list {
 	struct _statement* statement;
-	struct _statements_list* statementList;
+	struct _statements_list* statementsList;
 	bool isEmpty;
 };
 
@@ -48,7 +48,7 @@ struct _statement {
 	//
 	// type 3 <condition-statement> ENDIF;
 	struct _cond_statement* condStatement;
-	// type 3 ;
+	// type 4 ;
 	//
 };
 
@@ -58,7 +58,7 @@ struct _cond_statement {
 };
 struct _incomplete_cond_statement {
 	struct _cond_expression* condExpression;
-	struct _statements_list* statementList;
+	struct _statements_list* statementsList;
 
 };
 struct _cond_expression {
@@ -66,18 +66,24 @@ struct _cond_expression {
 	struct _unsigned_integer* uinteger;
 };
 struct _alt_part {
-	struct _statements_list* statementList;
+	struct _statements_list* statementsList;
 	bool isEmpty;
 };
 
 struct _procedure_identifier {
-	Identifier* value;
+	Identifier* identifier;
+	unsigned int line;
+	unsigned int column;
 };
 
 struct _variable_identifier {
-	Identifier* value;
+	Variable* variable;
+	unsigned int line;
+	unsigned int column;
 };
 
 struct _unsigned_integer {
-	Constant* value;
+	Constant* constant;
+	unsigned int line;
+	unsigned int column;
 };

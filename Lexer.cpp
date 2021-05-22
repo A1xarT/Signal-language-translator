@@ -4,6 +4,10 @@
 
 void Lexer(ifstream& test_file, string output_path)
 {
+	for (auto& i : InitVariables())
+		AddVariable(i);
+	for (auto& i : InitConstants())
+		AddConstant(i);
 	const char* symbols_table = InitSymbolTable();
 	list<string> keywords_table = InitKeywords();
 	unsigned int keyword_code = 401, constant_code = 501, identifier_code = 1001;
@@ -46,8 +50,7 @@ void Lexer(ifstream& test_file, string output_path)
 				token.code = constant_code++;
 			}
 			AddToken(token);
-			if (!FindConstant(token.value, "unsigned int"))
-				AddConstant(Constant{ token.value, "unsigned int" });
+			AddConstant(Constant{ token.value, "unsigned int" });
 			break;
 		}
 		case 2:	// identifier / keyword
@@ -85,10 +88,7 @@ void Lexer(ifstream& test_file, string output_path)
 				else
 				{
 					token.code = identifier_code++;
-					if (!FindIdentifier(idn))
-					{
-						AddIdentifier(Identifier{ idn });
-					}
+					AddIdentifier(Identifier{ idn });
 				}
 			}
 			AddToken(token);
@@ -172,7 +172,7 @@ void Lexer(ifstream& test_file, string output_path)
 		}
 	}
 	ClearFile(output_path);
-	LoadErrorLog(output_path);
+	//LoadErrorLog(output_path);
 	LoadTokenTable(output_path);
 	LoadConstantTable(output_path);
 	LoadIdentifierTable(output_path);

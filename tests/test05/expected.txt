@@ -4,21 +4,41 @@
    1       1              401                 PROGRAM     
    1       9              1001                PR1         
    1       12             59                  ;           
+   2       1              404                 LABEL       
+   2       7              501                 1           
+   2       8              44                  ,           
+   2       9              502                 2           
+   2       10             59                  ;           
    3       1              402                 BEGIN       
-   4       1              405                 GOTO        
-   4       6              501                 1           
-   4       7              59                  ;           
-   4       8              59                  ;           
-   4       9              59                  ;           
-   5       1              403                 END         
-   5       4              46                  .           
+   4       1              502                 2           
+   4       2              58                  :           
+   5       1              405                 GOTO        
+   5       6              501                 1           
+   5       7              59                  ;           
+   6       1              405                 GOTO        
+   6       6              502                 2           
+   6       7              59                  ;           
+   7       1              501                 1           
+   7       2              58                  :           
+   8       1              59                  ;           
+   9       1              403                 END         
+   9       4              46                  .           
 
                                     Constant table
     Type                    Value
-   unsigned int          1              
+   integer           12             
+   integer           200            
+   string            name1          
+   string            family         
+   i                 1              
+   i                 2              
 
                                   Identifier table
           Value
+         VAR1           
+         VAR2           
+         VAR3           
+         VAR4           
          PR1            
 
                                        Syntax tree
@@ -32,21 +52,51 @@
 ....<block>
 ......<declarations>
 ........<label-declarations>
-..........<empty>
+..........404 LABEL
+..........<unsigned-integer>
+............501 1
+..........<labels-list>
+............44 ,
+............<unsigned-integer>
+..............502 2
+............<labels-list>
+..............<empty>
+..........59 ;
 ......402 BEGIN
 ......<statements-list>
 ........<statement>
-..........405 GOTO
 ..........<unsigned-integer>
-............501 1
-..........59 ;
+............502 2
+..........58 :
+..........<statement>
+............405 GOTO
+............<unsigned-integer>
+..............501 1
+............59 ;
 ........<statements-list>
 ..........<statement>
+............405 GOTO
+............<unsigned-integer>
+..............502 2
 ............59 ;
 ..........<statements-list>
 ............<statement>
-..............59 ;
+..............<unsigned-integer>
+................501 1
+..............58 :
+..............<statement>
+................59 ;
 ............<statements-list>
 ..............<empty>
 ......403 END
 ....46 .
+
+                                     Assembly code
+PR1 PROC
+2:
+JMP 1
+JMP 2
+1:
+NOP
+PR1 ENDP
+END PR1

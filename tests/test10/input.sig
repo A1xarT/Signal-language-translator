@@ -1,0 +1,4 @@
+    PROGRAM PR1;
+    BEGIN
+IF VAR3 = VAR1 THEN ENDIF;
+    END.

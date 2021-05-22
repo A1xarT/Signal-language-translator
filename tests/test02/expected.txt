@@ -8,8 +8,19 @@
    3       1              403                 END         
    3       4              46                  .           
 
+                                    Constant table
+    Type                    Value
+   integer           12             
+   integer           200            
+   string            name1          
+   string            family         
+
                                   Identifier table
           Value
+         VAR1           
+         VAR2           
+         VAR3           
+         VAR4           
          PR1            
 
                                        Syntax tree
@@ -29,3 +40,8 @@
 ........<empty>
 ......403 END
 ....46 .
+
+                                     Assembly code
+PR1 PROC
+PR1 ENDP
+END PR1

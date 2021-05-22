@@ -1,5 +1,9 @@
 PROGRAM PR1;
-
+LABEL 1,2;
 BEGIN
-GOTO 1;;;
+2:
+GOTO 1;
+GOTO 2;
+1:
+;
 END.

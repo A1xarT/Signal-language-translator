@@ -4,33 +4,38 @@
    1       1              401                 PROGRAM     
    1       9              1001                PR1         
    1       12             59                  ;           
-   2       1              402                 BEGIN       
-   3       1              406                 IF          
-   3       4              1002                VAR1        
-   3       9              61                  =           
-   3       11             501                 6           
-   3       13             407                 THEN        
-   4       1              405                 GOTO        
-   4       6              502                 3           
-   4       7              59                  ;           
-   5       1              408                 ELSE        
-   6       1              405                 GOTO        
-   6       6              503                 4           
-   6       7              59                  ;           
-   7       1              409                 ENDIF       
-   7       6              59                  ;           
+   2       1              404                 LABEL       
+   2       7              501                 2           
+   2       8              59                  ;           
+   3       1              402                 BEGIN       
+   4       1              501                 2           
+   4       2              58                  :           
+   5       1              405                 GOTO        
+   5       6              502                 1           
+   5       7              59                  ;           
+   6       1              501                 2           
+   6       2              58                  :           
+   7       1              59                  ;           
+   8       1              403                 END         
+   8       4              46                  .           
+   8       5              1002                VAR1        
 
                                     Constant table
     Type                    Value
-   unsigned int          6              
-   unsigned int          3              
-   unsigned int          4              
+   integer           12             
+   integer           200            
+   string            name1          
+   string            family         
+   i                 2              
+   i                 1              
 
                                   Identifier table
           Value
-         PR1            
          VAR1           
-Parser: Error (line 7, column 7): 'END' expected but 'EndOfFile' found
+         VAR2           
+         VAR3           
+         VAR4           
+         PR1            
 
                                        Syntax tree
 <signal-program>
@@ -43,40 +48,41 @@ Parser: Error (line 7, column 7): 'END' expected but 'EndOfFile' found
 ....<block>
 ......<declarations>
 ........<label-declarations>
-..........<empty>
+..........404 LABEL
+..........<unsigned-integer>
+............501 2
+..........<labels-list>
+............<empty>
+..........59 ;
 ......402 BEGIN
 ......<statements-list>
 ........<statement>
-..........<condition-statement>
-............<incomplete-condition-statement>
-..............406 IF
-..............<conditional-expression>
-................<variable-identifier>
-..................<identifier>
-....................1002 VAR1
-................61 =
-................<unsigned-integer>
-..................501 6
-..............407 THEN
-..............<statements-list>
-................<statement>
-..................405 GOTO
-..................<unsigned-integer>
-....................502 3
-..................59 ;
-................<statements-list>
-..................<empty>
-............<alternative-part>
-..............408 ELSE
-..............<statements-list>
-................<statement>
-..................405 GOTO
-..................<unsigned-integer>
-....................503 4
-..................59 ;
-................<statements-list>
-..................<empty>
-..........409 ENDIF
-..........59 ;
+..........<unsigned-integer>
+............501 2
+..........58 :
+..........<statement>
+............405 GOTO
+............<unsigned-integer>
+..............502 1
+............59 ;
 ........<statements-list>
-..........<empty>
+..........<statement>
+............<unsigned-integer>
+..............501 2
+............58 :
+............<statement>
+..............59 ;
+..........<statements-list>
+............<empty>
+......403 END
+....46 .
+
+                                     Assembly code
+PR1 PROC
+2:
+NOP
+PR1 ENDP
+END PR1
+Parser: Error (line 8, column 5): 'EndOfFile' expected but 'VAR1' found
+Code Generator: Error (line 5, column 6): Undeclared label '1' was used
+Code Generator: Error (line 6, column 1): Label re-definition is not allowed

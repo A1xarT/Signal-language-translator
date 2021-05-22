@@ -46,15 +46,15 @@
 
                                     Constant table
     Type                    Value
-   i                 12             
-   i                 200            
-   s                 name1          
-   s                 family         
-   unsigned int          1              
-   unsigned int          2              
-   unsigned int          3              
-   unsigned int          4              
-   unsigned int          6              
+   integer           12             
+   integer           200            
+   string            name1          
+   string            family         
+   i                 1              
+   i                 2              
+   i                 3              
+   i                 4              
+   i                 6              
 
                                   Identifier table
           Value
@@ -159,3 +159,22 @@
 ................<empty>
 ......403 END
 ....46 .
+
+                                     Assembly code
+PR1 PROC
+1:
+2:
+3:
+4:
+NOP
+NOP
+JMP 1
+MOV AX, VAR1
+MOV BX, 6
+CMP AX, BX
+JNE ?L0
+JMP 3
+?L0:
+JMP 4
+PR1 ENDP
+END PR1

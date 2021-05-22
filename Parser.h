@@ -20,8 +20,8 @@ bool Statement(list<Token>::iterator& it, string indent, bool &insideErr, struct
 bool SubSt1(list<Token>::iterator& it, string indent, bool& insideErr, struct _statement* node);
 bool SubSt2(list<Token>::iterator& it, string indent, bool& insideErr, struct _statement* node);
 bool SubSt3(list<Token>::iterator& it, string indent, bool& insideErr, struct _statement* node);
-bool ConditionStatement(list<Token>::iterator& it, string indent, struct _cond_statement* node);
-bool IncompleteCondSt(list<Token>::iterator& it, string indent, struct _incomplete_cond_statement* node);
+bool ConditionStatement(list<Token>::iterator& it, string indent, bool& insideErr, struct _cond_statement* node);
+bool IncompleteCondSt(list<Token>::iterator& it, string indent, bool& insideErr, struct _incomplete_cond_statement* node);
 bool CondExpression(list<Token>::iterator& it, string indent, struct _cond_expression* node);
 bool AlternativePart(list<Token>::iterator& it, string indent, struct _alt_part* node);
 bool UnsignedInteger(list<Token>::iterator& it, string indent, struct _unsigned_integer* node);

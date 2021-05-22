@@ -6,27 +6,31 @@
    1       12             59                  ;           
    2       1              402                 BEGIN       
    3       1              59                  ;           
-   3       2              59                  ;           
-   3       3              59                  ;           
-   3       4              59                  ;           
    4       1              406                 IF          
-   4       4              1002                V1          
-   4       7              61                  =           
-   4       9              501                 13          
-   4       12             407                 THEN        
-   4       17             409                 ENDIF       
-   4       22             59                  ;           
+   4       4              1002                VAR2        
+   4       9              61                  =           
+   4       11             501                 13          
+   4       14             407                 THEN        
+   4       19             409                 ENDIF       
+   4       24             59                  ;           
    5       1              403                 END         
    5       4              46                  .           
 
                                     Constant table
     Type                    Value
-   unsigned int          13             
+   integer           12             
+   integer           200            
+   string            name1          
+   string            family         
+   i                 13             
 
                                   Identifier table
           Value
+         VAR1           
+         VAR2           
+         VAR3           
+         VAR4           
          PR1            
-         V1             
 
                                        Syntax tree
 <signal-program>
@@ -46,33 +50,35 @@
 ..........59 ;
 ........<statements-list>
 ..........<statement>
-............59 ;
-..........<statements-list>
-............<statement>
-..............59 ;
-............<statements-list>
-..............<statement>
-................59 ;
-..............<statements-list>
-................<statement>
-..................<condition-statement>
-....................<incomplete-condition-statement>
-......................406 IF
-......................<conditional-expression>
-........................<variable-identifier>
-..........................<identifier>
-............................1002 V1
-........................61 =
-........................<unsigned-integer>
-..........................501 13
-......................407 THEN
-......................<statements-list>
-........................<empty>
-....................<alternative-part>
-......................<empty>
-..................409 ENDIF
-..................59 ;
+............<condition-statement>
+..............<incomplete-condition-statement>
+................406 IF
+................<conditional-expression>
+..................<variable-identifier>
+....................<identifier>
+......................1002 VAR2
+..................61 =
+..................<unsigned-integer>
+....................501 13
+................407 THEN
 ................<statements-list>
 ..................<empty>
+..............<alternative-part>
+................<empty>
+............409 ENDIF
+............59 ;
+..........<statements-list>
+............<empty>
 ......403 END
 ....46 .
+
+                                     Assembly code
+PR1 PROC
+NOP
+MOV AX, VAR2
+MOV BX, 13
+CMP AX, BX
+JNE ?L0
+?L0: NOP
+PR1 ENDP
+END PR1

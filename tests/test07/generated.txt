@@ -4,33 +4,49 @@
    1       1              401                 PROGRAM     
    1       9              1001                PR1         
    1       12             59                  ;           
-   2       1              402                 BEGIN       
-   3       1              406                 IF          
-   3       4              1002                VAR1        
-   3       9              61                  =           
-   3       11             501                 6           
-   3       13             407                 THEN        
-   4       1              405                 GOTO        
-   4       6              502                 3           
-   4       7              59                  ;           
-   5       1              408                 ELSE        
+   2       1              404                 LABEL       
+   2       7              501                 3           
+   2       8              44                  ,           
+   2       9              502                 4           
+   2       10             59                  ;           
+   3       1              402                 BEGIN       
+   4       1              501                 3           
+   4       2              58                  :           
+   5       1              406                 IF          
+   5       4              1002                VAR1        
+   5       9              61                  =           
+   5       11             503                 6           
+   5       13             407                 THEN        
    6       1              405                 GOTO        
-   6       6              503                 4           
+   6       6              501                 3           
    6       7              59                  ;           
-   7       1              403                 END         
-   7       4              46                  .           
+   7       1              408                 ELSE        
+   8       1              405                 GOTO        
+   8       6              502                 4           
+   8       7              59                  ;           
+   9       1              502                 4           
+   9       2              58                  :           
+   10      1              59                  ;           
+   11      1              409                 ENDIF       
+   11      6              59                  ;           
 
                                     Constant table
     Type                    Value
-   unsigned int          6              
-   unsigned int          3              
-   unsigned int          4              
+   integer           12             
+   integer           200            
+   string            name1          
+   string            family         
+   i                 3              
+   i                 4              
+   i                 6              
 
                                   Identifier table
           Value
-         PR1            
          VAR1           
-Parser: Error (line 7, column 1): 'ENDIF' expected but 'END' found
+         VAR2           
+         VAR3           
+         VAR4           
+         PR1            
 
                                        Syntax tree
 <signal-program>
@@ -43,36 +59,76 @@ Parser: Error (line 7, column 1): 'ENDIF' expected but 'END' found
 ....<block>
 ......<declarations>
 ........<label-declarations>
-..........<empty>
+..........404 LABEL
+..........<unsigned-integer>
+............501 3
+..........<labels-list>
+............44 ,
+............<unsigned-integer>
+..............502 4
+............<labels-list>
+..............<empty>
+..........59 ;
 ......402 BEGIN
 ......<statements-list>
 ........<statement>
-..........<condition-statement>
-............<incomplete-condition-statement>
-..............406 IF
-..............<conditional-expression>
-................<variable-identifier>
-..................<identifier>
-....................1002 VAR1
-................61 =
-................<unsigned-integer>
-..................501 6
-..............407 THEN
-..............<statements-list>
-................<statement>
-..................405 GOTO
+..........<unsigned-integer>
+............501 3
+..........58 :
+..........<statement>
+............<condition-statement>
+..............<incomplete-condition-statement>
+................406 IF
+................<conditional-expression>
+..................<variable-identifier>
+....................<identifier>
+......................1002 VAR1
+..................61 =
 ..................<unsigned-integer>
-....................502 3
-..................59 ;
+....................503 6
+................407 THEN
 ................<statements-list>
-..................<empty>
-............<alternative-part>
-..............408 ELSE
-..............<statements-list>
-................<statement>
-..................405 GOTO
-..................<unsigned-integer>
-....................503 4
-..................59 ;
+..................<statement>
+....................405 GOTO
+....................<unsigned-integer>
+......................501 3
+....................59 ;
+..................<statements-list>
+....................<empty>
+..............<alternative-part>
+................408 ELSE
 ................<statements-list>
-..................<empty>
+..................<statement>
+....................405 GOTO
+....................<unsigned-integer>
+......................502 4
+....................59 ;
+..................<statements-list>
+....................<statement>
+......................<unsigned-integer>
+........................502 4
+......................58 :
+......................<statement>
+........................59 ;
+....................<statements-list>
+......................<empty>
+............409 ENDIF
+............59 ;
+........<statements-list>
+..........<empty>
+
+                                     Assembly code
+PR1 PROC
+3:
+MOV AX, VAR1
+MOV BX, 6
+CMP AX, BX
+JNE ?L0
+JMP 3
+?L0:
+JMP 4
+4:
+NOP
+PR1 ENDP
+END PR1
+Parser: Error (line 11, column 7): 'END' expected but 'EndOfFile' found

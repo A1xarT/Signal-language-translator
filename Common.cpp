@@ -29,11 +29,8 @@ void LoadErrorLog(string path)
 	out.open(path, ios::app);
 	if (out.is_open())
 	{
-		list<string>::iterator it;
-		for (it = error_list.begin(); it != error_list.end(); it++)
-		{
-			out << *it << endl;
-		}
+		for (auto& it : error_list)
+			out << it << endl;
 	}
 }
 void LoadTokenTable(string path)
@@ -45,12 +42,8 @@ void LoadTokenTable(string path)
 	{
 		out << endl << setw(50) << "Token table" << endl;
 		out << setw(8) << " Row  |" << setw(10) << " Column |" << setw(22) << " Token identifier |" << setw(18) << "  Token value  " << endl;
-		list<Token>::iterator it;
-		for (it = token_list.begin(); it != token_list.end(); it++)
-		{
-			Token tk = *it;
+		for (auto& tk : token_list)
 			out << left << "   " << setw(8) << tk.line << setw(10) << tk.column << "     " << setw(20) << tk.code << setw(12) << tk.value << endl;
-		}
 	}
 }
 void LoadConstantTable(string path)
@@ -62,12 +55,8 @@ void LoadConstantTable(string path)
 	{
 		out << endl << setw(50) << "Constant table" << endl;
 		out << setw(8) << "Type" << "          " << setw(15) << "Value" << endl;
-		list<Constant>::iterator it;
-		for (it = constant_list.begin(); it != constant_list.end(); it++)
-		{
-			Constant cons = *it;
-			out << left << "   " << setw(8) << cons.type << "          " << setw(15) << cons.value << endl;
-		}
+		for (auto& i : constant_list)
+			out << left << "   " << setw(8) << i.type << "          " << setw(15) << i.value << endl;
 	}
 }
 void LoadIdentifierTable(string path)
@@ -79,12 +68,8 @@ void LoadIdentifierTable(string path)
 	{
 		out << endl << setw(50) << "Identifier table" << endl;
 		out << setw(15) << "Value" << endl;
-		list<Identifier>::iterator it;
-		for (it = identifier_list.begin(); it != identifier_list.end(); it++)
-		{
-			Identifier idn = *it;
-			out << left << "         " << setw(15) << idn.value << endl;
-		}
+		for (auto& i : identifier_list)
+			out << left << "         " << setw(15) << i.value << endl;
 	}
 }
 void LoadSyntaxTree(string path, list<string> syntax_tree)
@@ -95,68 +80,62 @@ void LoadSyntaxTree(string path, list<string> syntax_tree)
 	if (out.is_open())
 	{
 		out << endl << setw(50) << "Syntax tree" << endl;
+		for (auto& i : syntax_tree)
+			out << i << endl;
+	}
+}
+void LoadAsmCode(string path, list<string> asm_commands)
+{
+	if (asm_commands.size() == 0) return;
+	ofstream out;
+	out.open(path, ios::app);
+	if (out.is_open())
+	{
+		out << endl << setw(50) << "Assembly code" << endl;
 		list<string>::iterator it;
-		for (it = syntax_tree.begin(); it != syntax_tree.end(); it++)
-		{
-			string str = *it;
-			out << str << endl;
-		}
+		for (auto& i : asm_commands)
+			out << i << endl;
 	}
 }
 int FindToken(string _value)
 {
 	list<Token>::iterator it;
-	for (it = token_list.begin(); it != token_list.end(); it++)
+	for (auto& tk : token_list)
 	{
-		Token tk = *it;
 		if (tk.value == _value)
-		{
 			return tk.code;
-		}
 	}
 	return -1;
 }
 bool FindIdentifier(string _value)
 {
 	list<Identifier>::iterator it;
-	for (it = identifier_list.begin(); it != identifier_list.end(); it++)
-	{
-		Identifier idt = *it;
-		if (idt.value == _value)
-		{
+	for (auto& it : identifier_list)
+		if (it.value == _value)
 			return true;
-		}
-	}
 	return false;
 }
 bool FindConstant(string _value, string _type)
 {
 	list<Constant>::iterator it;
-	for (it = constant_list.begin(); it != constant_list.end(); it++)
-	{
-		Constant con = *it;
-		if (con.value == _value && con.type == _type)
-		{
+	for (auto& it : constant_list)
+		if (it.value == _value && it.type == _type)
 			return true;
-		}
-	}
 	return false;
 }
 Variable FindVariable(string name)
 {
 	list<Variable>::iterator it;
-	for (it = variables_list.begin(); it != variables_list.end(); it++)
-	{
-		Variable var = *it;
-		if (var.identifier->value == name)
-			return var;
-	}
+	for (auto& it : variables_list)
+		if (it.identifier->value == name)
+			return it;
 	return Variable{ new Identifier{""}, new Constant{"", ""} };
 }
 void FreeTables()
 {
 	token_list.clear();
 	identifier_list.clear();
+	variables_list.clear();
 	constant_list.clear();
 	error_list.clear();
 }

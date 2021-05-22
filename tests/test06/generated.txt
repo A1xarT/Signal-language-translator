@@ -4,13 +4,46 @@
    1       1              401                 PROGRAM     
    1       9              1001                PR1         
    1       12             59                  ;           
-   2       1              402                 BEGIN       
-   3       1              403                 END         
+   2       1              404                 LABEL       
+   2       7              501                 3           
+   2       8              44                  ,           
+   2       9              502                 4           
+   2       10             59                  ;           
+   3       1              402                 BEGIN       
+   4       1              501                 3           
+   4       2              58                  :           
+   5       1              406                 IF          
+   5       4              1002                VAR1        
+   5       9              61                  =           
+   5       11             503                 6           
+   5       13             407                 THEN        
+   6       1              405                 GOTO        
+   6       6              501                 3           
+   6       7              59                  ;           
+   7       1              408                 ELSE        
+   8       1              405                 GOTO        
+   8       6              502                 4           
+   8       7              59                  ;           
+   9       1              403                 END         
+   9       4              46                  .           
+
+                                    Constant table
+    Type                    Value
+   integer           12             
+   integer           200            
+   string            name1          
+   string            family         
+   i                 3              
+   i                 4              
+   i                 6              
 
                                   Identifier table
           Value
+         VAR1           
+         VAR2           
+         VAR3           
+         VAR4           
          PR1            
-Parser: Error (line 3, column 4): '.' expected but 'EndOfFile' found
 
                                        Syntax tree
 <signal-program>
@@ -23,8 +56,63 @@ Parser: Error (line 3, column 4): '.' expected but 'EndOfFile' found
 ....<block>
 ......<declarations>
 ........<label-declarations>
-..........<empty>
+..........404 LABEL
+..........<unsigned-integer>
+............501 3
+..........<labels-list>
+............44 ,
+............<unsigned-integer>
+..............502 4
+............<labels-list>
+..............<empty>
+..........59 ;
 ......402 BEGIN
 ......<statements-list>
-........<empty>
-......403 END
+........<statement>
+..........<unsigned-integer>
+............501 3
+..........58 :
+..........<statement>
+............<condition-statement>
+..............<incomplete-condition-statement>
+................406 IF
+................<conditional-expression>
+..................<variable-identifier>
+....................<identifier>
+......................1002 VAR1
+..................61 =
+..................<unsigned-integer>
+....................503 6
+................407 THEN
+................<statements-list>
+..................<statement>
+....................405 GOTO
+....................<unsigned-integer>
+......................501 3
+....................59 ;
+..................<statements-list>
+....................<empty>
+..............<alternative-part>
+................408 ELSE
+................<statements-list>
+..................<statement>
+....................405 GOTO
+....................<unsigned-integer>
+......................502 4
+....................59 ;
+..................<statements-list>
+....................<empty>
+
+                                     Assembly code
+PR1 PROC
+3:
+MOV AX, VAR1
+MOV BX, 6
+CMP AX, BX
+JNE ?L0
+JMP 3
+?L0:
+PR1 ENDP
+END PR1
+Parser: Error (line 9, column 1): 'ENDIF' expected but 'END' found
+Code Generator: Error (line 8, column 6): Undefined label '4' was used

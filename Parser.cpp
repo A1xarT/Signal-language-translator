@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "Parser.h"
-struct _signal_program * Parser(string output_path)
+struct _signal_program* Parser(string output_path)
 {
 	token_list = GetTokenList();
 	list<Token>::iterator token = token_list.begin();
@@ -252,7 +252,7 @@ bool Statement(list<Token>::iterator& it, string indent, bool& insideErr, struct
 	list<Token>::iterator prevIt = it;
 	list<string> prevTree(syntax_tree);
 	list<string> prevErrList(GetErrorList());
-	node->statementType = 0;
+	node->statementType = 1;
 	node->uinteger = new _unsigned_integer();
 	if (EndOfTokenList(it) || !UnsignedInteger(it, indent + "..", node->uinteger))
 	{
@@ -279,12 +279,12 @@ bool Statement(list<Token>::iterator& it, string indent, bool& insideErr, struct
 		it = prevIt;
 		return false;
 	}
-	node->statementType = 1;
 	return true;
 }
 bool SubSt1(list<Token>::iterator& it, string indent, bool& insideErr, struct _statement* node)
 {
 	list<Token>::iterator prevIt = it;
+	node->statementType = 2;
 	if (EndOfTokenList(it) || (*it).code != 405)
 	{
 		return SubSt2(it, indent, insideErr, node);
@@ -309,7 +309,6 @@ bool SubSt1(list<Token>::iterator& it, string indent, bool& insideErr, struct _s
 	}
 	AddBranch(to_string((*it).code) + " " + (*it).value, indent + "..");
 	it++;
-	node->statementType = 2;
 	return true;
 }
 bool SubSt2(list<Token>::iterator& it, string indent, bool& insideErr, struct _statement* node)
@@ -319,12 +318,22 @@ bool SubSt2(list<Token>::iterator& it, string indent, bool& insideErr, struct _s
 	list<string> prevErrList(GetErrorList());
 
 	node->condStatement = new _cond_statement();
-	if (EndOfTokenList(it) || !ConditionStatement(it, indent + "..", node->condStatement))
+	node->statementType = 3;
+	if (EndOfTokenList(it))
 	{
-		syntax_tree = prevTree;
-		SetErrorList(prevErrList);
-		it = prevIt;
 		return SubSt3(it, indent, insideErr, node);
+	}
+	insideErr = true;
+	if (!ConditionStatement(it, indent + "..", insideErr, node->condStatement))
+	{
+		if (!insideErr)
+		{
+			syntax_tree = prevTree;
+			SetErrorList(prevErrList);
+			it = prevIt;
+			return SubSt3(it, indent, insideErr, node);
+		}
+		return false;
 	}
 	if (EofErrorCheck("ENDIF", it, prevIt))
 		return false;
@@ -346,11 +355,11 @@ bool SubSt2(list<Token>::iterator& it, string indent, bool& insideErr, struct _s
 	}
 	AddBranch(to_string((*it).code) + " " + (*it).value, indent + "..");
 	it++;
-	node->statementType = 3;
 	return true;
 }
 bool SubSt3(list<Token>::iterator& it, string indent, bool& insideErr, struct _statement* node)
 {
+	node->statementType = 4;
 	if (EofErrorCheck(";", it, it))
 		return false;
 	if ((*it).code != ';')
@@ -361,17 +370,19 @@ bool SubSt3(list<Token>::iterator& it, string indent, bool& insideErr, struct _s
 	}
 	AddBranch(to_string((*it).code) + " " + (*it).value, indent + "..");
 	it++;
-	node->statementType = 4;
 	return true;
 }
-bool ConditionStatement(list<Token>::iterator& it, string indent, struct _cond_statement* node)
+bool ConditionStatement(list<Token>::iterator& it, string indent, bool& insideErr, struct _cond_statement* node)
 {
 	AddBranch("<condition-statement>", indent);
 	list<Token>::iterator prevIt = it;
 	if (EofErrorCheck("<incomplete-condition-statement>", it, prevIt))
+	{
 		return false;
+		insideErr = false;
+	}
 	node->incompleteCondSt = new _incomplete_cond_statement();
-	if (!IncompleteCondSt(it, indent + "..", node->incompleteCondSt))
+	if (!IncompleteCondSt(it, indent + "..", insideErr, node->incompleteCondSt))
 	{
 		it = prevIt;
 		return false;
@@ -384,16 +395,20 @@ bool ConditionStatement(list<Token>::iterator& it, string indent, struct _cond_s
 	}
 	return true;
 }
-bool IncompleteCondSt(list<Token>::iterator& it, string indent, struct _incomplete_cond_statement* node)
+bool IncompleteCondSt(list<Token>::iterator& it, string indent, bool& insideErr, struct _incomplete_cond_statement* node)
 {
 	AddBranch("<incomplete-condition-statement>", indent);
 	list<Token>::iterator prevIt = it;
 	if (EofErrorCheck("IF", it, prevIt))
+	{
+		insideErr = false;
 		return false;
+	}
 	if ((*it).code != 406)
 	{
 		LogParserError("IF", *it);
 		it = prevIt;
+		insideErr = false;
 		return false;
 	}
 	AddBranch(to_string((*it).code) + " " + (*it).value, indent + "..");
@@ -481,10 +496,10 @@ bool UnsignedInteger(list<Token>::iterator& it, string indent, struct _unsigned_
 {
 	AddBranch("<unsigned-integer>", indent);
 	node->constant = new Constant();
+	node->line = (*it).line;
+	node->column = (*it).column;
 	if (IsConstant(*it, indent + "..", node->constant))
 	{
-		node->line = (*it).line;
-		node->column = (*it).column;
 		it++;
 		return true;
 	}
@@ -526,7 +541,7 @@ bool IsConstant(Token token, string indent, struct Constant* node)
 	if (token.code > 500 && token.code <= 1000)
 	{
 		AddBranch(to_string(token.code) + " " + token.value, indent);
-		node->type = "i";
+		node->type = "integer";
 		node->value = token.value;
 		return true;
 	}

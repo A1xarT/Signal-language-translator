@@ -7,7 +7,7 @@ void run_tests(string folder_name, string subfolder_name, unsigned int tests_num
 		string test_folder_name = folder_name + "/" + subfolder_name + ((i < 10) ? "0" + to_string(i) : to_string(i)) + "/";
 		ifstream inputFile(test_folder_name + "input.sig");
 		Lexer(inputFile, test_folder_name + "generated.txt");
-		Parser(test_folder_name + "generated.txt");
+		CodeGenerator(Parser(test_folder_name + "generated.txt"), test_folder_name + "generated.txt");
 
 		ifstream expectedFile(test_folder_name + "expected.txt"), generatedFile(test_folder_name + "generated.txt");
 		bool test_failed = false;

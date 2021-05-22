@@ -5,20 +5,28 @@
 
 void CodeGenerator(struct _signal_program* tree, string output_path)
 {
-	GenerateCommands(tree, output_path);
-	PrintAsm();
+	system_label_counter = 0;
+	GetAllLabels(tree);
+	GenerateCommands(tree);
+	GenerateExit(tree);
+	LoadAsmCode(output_path, asm_commands);
 	LoadErrorLog(output_path);
+	//PrintAsm();
+	ClearGeneratorData();
 }
-void GenerateCommands(struct _signal_program* tree, string output_path)
+void GenerateCommands(struct _signal_program* tree)
 {
 	auto program = tree->program;
+	if (!program || !program->prcIdnt || !program->block || !program->block->declarations ||
+		!program->block->declarations->labelDeclarations) return;
 	auto program_name = program->prcIdnt->identifier->value;
 	auto label_declarations = program->block->declarations->labelDeclarations;
-	AddLine(program_name + " proc");	// Main program start
+	AddLine(program_name + " PROC");	// Main program start
 	if (!label_declarations->isEmpty)	// labels declaration
 	{
 		AddLabel(label_declarations->uinteger->constant->value);
 		auto labels_list = label_declarations->labelsList;
+		if (!labels_list) return;
 		while (!labels_list->isEmpty)
 		{
 			AddLabel(labels_list->uinteger->constant->value);
@@ -27,14 +35,16 @@ void GenerateCommands(struct _signal_program* tree, string output_path)
 	}
 	auto statementsList = program->block->statementsList;
 	GenerateStatementList(statementsList);	// Stataments
-	AddLine(program_name + " endp");	// Main program endpoint
-	AddLine("end " + program_name);		// Main program end
 }
 void GenerateStatementList(_statements_list* statementsList)
 {
-	while (!statementsList->isEmpty)
+	bool getNext = true;
+	auto statements_list = statementsList;
+	struct _statement* statement = new _statement();
+	while (statements_list != nullptr && !statements_list->isEmpty)
 	{
-		auto statement = statementsList->statement;
+		if (getNext)
+			statement = statements_list->statement;
 		struct _unsigned_integer* uinteger;
 		struct _cond_expression* cond_expression;
 		struct Variable* var;
@@ -48,36 +58,55 @@ void GenerateStatementList(_statements_list* statementsList)
 				uinteger = statement->uinteger;
 				if (!CheckLabel(uinteger->constant->value))
 				{
-					LogCodeGeneratorError("Undeclared label used", uinteger->line, uinteger->column);
-					return;
+					string error = "Undeclared label '" + uinteger->constant->value + "' was used";
+					LogCodeGeneratorError(error, uinteger->line, uinteger->column);
+					statement = statement->statement;
+					continue;
 				}
-				if (IsLabelUsed(uinteger->constant->value))
+				if (IsLabelDefined(uinteger->constant->value))
 				{
 					LogCodeGeneratorError("Label re-definition is not allowed", uinteger->line, uinteger->column);
-					return;
+					statement = statement->statement;
+					continue;
 				}
 				AddLine(statement->uinteger->constant->value + ":");
-				AddUsedLabel(statement->uinteger->constant->value);
+				AddDefinedLabel(statement->uinteger->constant->value);
 				statement = statement->statement;
 			}
-			statementsList->statement = statement;
+			getNext = false;
 			continue;
 		case 2:
 			uinteger = statement->uinteger;
 			if (!CheckLabel(uinteger->constant->value))
 			{
-				LogCodeGeneratorError("Undefined label used", uinteger->line, uinteger->column);
+				string error = "Undeclared label '" + uinteger->constant->value + "' was used";
+				LogCodeGeneratorError(error, uinteger->line, uinteger->column);
 				break;
 			}
-			AddLine("jmp " + uinteger->constant->value);
+			if (!IsLabelAvailable(uinteger->constant->value))
+			{
+				string error = "Undefined label '" + uinteger->constant->value + "' was used";
+				LogCodeGeneratorError(error, uinteger->line, uinteger->column);
+				break;
+			}
+			AddLine("JMP " + uinteger->constant->value);
 			break;
 		case 3:
 			cond_expression = statement->condStatement->incompleteCondSt->condExpression;
 			var = cond_expression->varIdnt->variable;
 			number = cond_expression->uinteger;
+			if (var->constant->type == "")
+			{
+				string error = "Undeclared variable '" + var->identifier->value + "' was used";
+				LogCodeGeneratorError(error, cond_expression->varIdnt->line, cond_expression->varIdnt->column);
+				break;
+			}
 			if (var->constant->type != number->constant->type)
 			{
-				LogCodeGeneratorError("Incompatible types of variables 'string' and 'unsigned integer' in assignment",
+				if (number->constant->type == "")
+					break;
+				LogCodeGeneratorError("Incompatible types of variable '" + var->identifier->value + ":" +
+					var->constant->type + "'" + " and constant '" + number->constant->type + "' in assignment",
 					cond_expression->varIdnt->line, cond_expression->varIdnt->column);
 				break;
 			}
@@ -89,7 +118,7 @@ void GenerateStatementList(_statements_list* statementsList)
 			GenerateStatementList(statement->condStatement->incompleteCondSt->statementsList);
 			if (statement->condStatement->alternativePart->isEmpty)
 			{
-				AddLine(system_label + ":	NOP");
+				AddLine(system_label + ": NOP");
 			}
 			else
 			{
@@ -98,12 +127,33 @@ void GenerateStatementList(_statements_list* statementsList)
 			}
 			break;
 		case 4:
-			AddLine("nop");
+			AddLine("NOP");
 			break;
 		default:
 			break;
 		}
-		statementsList = statementsList->statementsList;
+		statements_list = statements_list->statementsList;
+		getNext = true;
+	}
+}
+void GetAllLabels(struct _signal_program* tree)
+{
+	auto prevErrors = GetErrorList();
+	GenerateCommands(tree);
+	asm_commands.clear();
+	labels_table.clear();
+	available_labels = list<string>(defined_labels);
+	defined_labels.clear();
+	SetErrorList(prevErrors);
+	system_label_counter = 0;
+}
+void GenerateExit(struct _signal_program* tree)
+{
+	if (tree->program && tree->program->prcIdnt)
+	{
+		auto program_name = tree->program->prcIdnt->identifier->value;
+		AddLine(program_name + " ENDP");	// Main program endpoint
+		AddLine("END " + program_name);		// Main program end
 	}
 }
 void AddLine(string line)
@@ -116,18 +166,22 @@ void AddLabel(string label_name)
 	labels_table.push_back(label_name);
 }
 
-void AddUsedLabel(string label_name)
+void AddDefinedLabel(string label_name)
 {
-	used_labels.push_back(label_name);
+	defined_labels.push_back(label_name);
 }
-bool IsLabelUsed(string label_name)
+bool IsLabelDefined(string label_name)
 {
-	list<string>::iterator it = used_labels.begin();
-	for (; it != used_labels.end(); it++)
-	{
-		if (*it == label_name)
+	for (auto& it : defined_labels)
+		if (it == label_name)
 			return true;
-	}
+	return false;
+}
+bool IsLabelAvailable(string label_name)
+{
+	for (auto& i : available_labels)
+		if (i == label_name)
+			return true;
 	return false;
 }
 bool CheckLabel(string label_name)
@@ -155,9 +209,15 @@ void LogCodeGeneratorError(string error, unsigned int line, unsigned int column)
 
 void PrintAsm()
 {
-	list<string>::iterator it = asm_commands.begin();
-	for (; it != asm_commands.end(); it++)
-	{
-		cout << *it << endl;
-	}
+	for (auto& i : asm_commands)
+		cout << i << endl;
+}
+void ClearGeneratorData()
+{
+	labels_table.clear();
+	available_labels.clear();
+	defined_labels.clear();
+	asm_commands.clear();
+	system_label_counter = 0;
+	FreeTables();
 }

@@ -1,5 +1,61 @@
-Parser: Error (line 0, column 0): 'PROGRAM' expected but 'EndOfFile' found
+
+                                       Token table
+  Row  |  Column |    Token identifier |     Token value  
+   1       5              401                 PROGRAM     
+   1       13             1001                PR1         
+   1       16             59                  ;           
+   2       5              402                 BEGIN       
+   3       1              406                 IF          
+   3       4              1002                VAR3        
+   3       9              61                  =           
+   3       11             1003                VAR1        
+   3       16             407                 THEN        
+   3       21             409                 ENDIF       
+   3       26             59                  ;           
+   4       5              403                 END         
+   4       8              46                  .           
+
+                                    Constant table
+    Type                    Value
+   integer           12             
+   integer           200            
+   string            name1          
+   string            family         
+
+                                  Identifier table
+          Value
+         VAR1           
+         VAR2           
+         VAR3           
+         VAR4           
+         PR1            
 
                                        Syntax tree
 <signal-program>
 ..<program>
+....401 PROGRAM
+....<procedure-identifier>
+......<identifier>
+........1001 PR1
+....59 ;
+....<block>
+......<declarations>
+........<label-declarations>
+..........<empty>
+......402 BEGIN
+......<statements-list>
+........<statement>
+..........<condition-statement>
+............<incomplete-condition-statement>
+..............406 IF
+..............<conditional-expression>
+................<variable-identifier>
+..................<identifier>
+....................1002 VAR3
+................61 =
+
+                                     Assembly code
+PR1 PROC
+PR1 ENDP
+END PR1
+Parser: Error (line 3, column 11): '<unsigned-integer>' expected but 'VAR1' found

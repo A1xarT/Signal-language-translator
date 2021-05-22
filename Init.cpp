@@ -24,10 +24,10 @@ list<string> InitKeywords()
 }
 list<Variable> InitVariables()
 {
-	list<Variable> variables = { Variable{new Identifier{"VAR1"}, new Constant{"12", "i"}},
-		Variable{new Identifier{"VAR2"}, new Constant{"200", "i"}},
-		Variable{new Identifier{"VAR3"}, new Constant{"name1", "s"}},
-		Variable{new Identifier{"VAR4"}, new Constant{"family", "s"}} };
+	list<Variable> variables = { Variable{new Identifier{"VAR1"}, new Constant{"12", "integer"}},
+		Variable{new Identifier{"VAR2"}, new Constant{"200", "integer"}},
+		Variable{new Identifier{"VAR3"}, new Constant{"name1", "string"}},
+		Variable{new Identifier{"VAR4"}, new Constant{"family", "string"}} };
 	return variables;
 }
 list<Constant> InitConstants()

@@ -41,6 +41,7 @@ void LoadTokenTable(string path);
 void LoadConstantTable(string path);
 void LoadIdentifierTable(string path);
 void LoadSyntaxTree(string path, list<string> syntax_tree);
+void LoadAsmCode(string path, list<string> asm_commands);
 
 int FindToken(string _value);
 bool FindIdentifier(string _value);

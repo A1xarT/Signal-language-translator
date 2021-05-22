@@ -50,7 +50,7 @@ void Lexer(ifstream& test_file, string output_path)
 				token.code = constant_code++;
 			}
 			AddToken(token);
-			AddConstant(Constant{ token.value, "unsigned int" });
+			AddConstant(Constant{ token.value, "i" });
 			break;
 		}
 		case 2:	// identifier / keyword
